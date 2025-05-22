@@ -93,6 +93,13 @@ Join our **Discord community** to ask questions or share feedback
 
 ---
 
+> ⚠ **Note**  
+> This application is currently under active development and may be unstable.  
+> It is designed for **Windows only**, and has not been tested on other platforms.  
+> Use at your own risk — the developer is **not responsible for any damage or issues** caused by its usage.
+
+---
+
 ## Logo & Branding
 
 The **mona-auto** logo is a trademark of **Jehyung Yi**.  
