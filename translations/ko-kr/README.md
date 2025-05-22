@@ -89,6 +89,12 @@ cargo build --release
 **디스코드 커뮤니티**에 참여하여 질문하거나 아이디어를 나눠보세요
 <a href="https://discord.gg/JZhRmnZVxB"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
 
+---
+> ⚠ **주의 사항**  
+> 이 애플리케이션은 현재 개발 중인 **베타 버전**이며, 일부 기능이 불안정할 수 있습니다.  
+> **Windows 전용**으로 제작되었으며, 다른 운영체제에서는 정상적으로 작동하지 않을 수 있습니다.  
+> 사용 중 발생한 문제나 손해에 대해 **개발자는 어떠한 책임도 지지 않습니다**.
+---
 ## Logo & Branding
 
 The **mona-auto** logo is a trademark of **Jehyung Yi**.  
