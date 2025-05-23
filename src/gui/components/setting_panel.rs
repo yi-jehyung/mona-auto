@@ -135,9 +135,9 @@ fn show_select_loop_speed(ui: &mut Ui, app: &mut MyApp) {
 
 fn show_select_threshold(ui: &mut Ui, app: &mut MyApp) {
     let text = match app.setting.threshold {
-        t if t <= 0.6 => fl!(app.i18n_loader, "setting-panel-threshold-very-sensitive"),
-        t if t <= 0.7 => fl!(app.i18n_loader, "setting-panel-threshold-sensitive"),
-        t if t <= 0.8 => fl!(app.i18n_loader, "setting-panel-threshold-medium"),
+        t if t >= 0.03 => fl!(app.i18n_loader, "setting-panel-threshold-very-sensitive"),
+        t if t >= 0.02 => fl!(app.i18n_loader, "setting-panel-threshold-sensitive"),
+        t if t >= 0.01 => fl!(app.i18n_loader, "setting-panel-threshold-medium"),
         _ => fl!(app.i18n_loader, "setting-panel-threshold-low"),
     };
     ComboBox::new("threshold", fl!(app.i18n_loader, "setting-panel-label-threshold"))
@@ -146,41 +146,41 @@ fn show_select_threshold(ui: &mut Ui, app: &mut MyApp) {
             if ui
                 .selectable_value(
                     &mut app.setting.threshold,
-                    0.6,
+                    0.03,
                     fl!(app.i18n_loader, "setting-panel-threshold-very-sensitive"),
                 )
                 .clicked()
             {
-                app.setting.threshold = 0.6;
+                app.setting.threshold = 0.03;
                 app.setting.save();
             }
             if ui
                 .selectable_value(
                     &mut app.setting.threshold,
-                    0.7,
+                    0.02,
                     fl!(app.i18n_loader, "setting-panel-threshold-sensitive"),
                 )
                 .clicked()
             {
-                app.setting.threshold = 0.7;
+                app.setting.threshold = 0.02;
                 app.setting.save();
             }
             if ui
                 .selectable_value(
                     &mut app.setting.threshold,
-                    0.8,
+                    0.01,
                     fl!(app.i18n_loader, "setting-panel-threshold-medium"),
                 )
                 .clicked()
             {
-                app.setting.threshold = 0.8;
+                app.setting.threshold = 0.01;
                 app.setting.save();
             }
             if ui
-                .selectable_value(&mut app.setting.threshold, 0.9, fl!(app.i18n_loader, "setting-panel-threshold-low"))
+                .selectable_value(&mut app.setting.threshold, 0.005, fl!(app.i18n_loader, "setting-panel-threshold-low"))
                 .clicked()
             {
-                app.setting.threshold = 0.9;
+                app.setting.threshold = 0.005;
                 app.setting.save();
             }
         });

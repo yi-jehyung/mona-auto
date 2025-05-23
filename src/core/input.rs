@@ -222,7 +222,7 @@ impl Input {
             for i in 1..=steps {
                 let ix = sx + (ex - sx) * i / steps;
                 let iy = sy + (ey - sy) * i / steps;
-                println!("{ix} {iy}");
+                // println!("{ix} {iy}");
                 let lparam_move = makelparam(ix, iy);
                 // PostMessageW(Some(self.hwnd), WM_LBUTTONDOWN, WPARAM(1), lparam_move);
                 let _ = PostMessageW(Some(self.hwnd), WM_MOUSEMOVE, WPARAM(1), lparam_move);

@@ -117,17 +117,17 @@ pub fn start_automation_loop(
                             }
                         };
                         let threshold = setting.threshold;
-                        let (x, y, similarity) = match_template(&gray_frame, &gray_template, &item.roi);
+                        let (x, y, score) = match_template(&gray_frame, &gray_template, &item.roi);
 
-                        if similarity >= threshold {
+                        if score <= threshold {
                             for action in item.actions.iter() {
                                 if action.enabled {
-                                    println!("{}", fl!(loader, "message-automation-loop-template-found", name = item.name.clone(), x = x, y = y, similarity = similarity));
+                                    println!("{}", fl!(loader, "message-automation-loop-template-found", name = item.name.clone(), x = x, y = y, similarity = score));
                                     action.execute(top_hwnd, low_hwnd, &mut project, &setting, Some((x, y)), &loader);
                                 }
                             }
                         } else {
-                            eprintln!("{}", fl!(loader, "message-automation-loop-error-match-failed", similarity = similarity));
+                            // eprintln!("{}", fl!(loader, "message-automation-loop-error-match-failed", similarity = score));
                         }
                     }
                     None => {

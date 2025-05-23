@@ -10,10 +10,10 @@ pub fn match_template(
 ) -> (u32, u32, f32) {
     let roi_image = crop_imm(image, roi.x, roi.y, roi.width, roi.height).to_image();
 
-    let result = match_template_parallel(&roi_image, template, MatchTemplateMethod::CrossCorrelationNormalized);
+    let result = match_template_parallel(&roi_image, template, MatchTemplateMethod::SumOfSquaredErrorsNormalized);
     let extremes = find_extremes(&result);
-    let score = extremes.max_value;
-    let (x, y) = extremes.max_value_location;
+    let score = extremes.min_value;
+    let (x, y) = extremes.min_value_location;
     
     //실제 위치 계산
     let center_x = roi.x + x + template.width() / 2;

@@ -110,7 +110,7 @@ impl Action {
             }
             _ => {}
         }
-
+        
         match &self.action {
             ActionType::LeftClick {
                 x,
@@ -137,7 +137,6 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
                     println!("{}", fl!(loader, "message-action-left-click", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.left_click(*x, *y),
@@ -171,7 +170,6 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
                     println!("{}", fl!(loader, "message-action-right-click", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.right_click(*x, *y),
@@ -218,7 +216,6 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
                     println!("{}", fl!(loader, "message-action-scroll", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.scroll(*x, *y, *delta),
