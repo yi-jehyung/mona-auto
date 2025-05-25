@@ -204,9 +204,9 @@ pub fn activate_window(hwnd: HWND) {
         if IsIconic(hwnd).as_bool() {
             let _ = ShowWindow(hwnd, SW_RESTORE);
             std::thread::sleep(std::time::Duration::from_millis(200));
-        }
 
-        let _ = SetForegroundWindow(hwnd);
+            let _ = SetForegroundWindow(hwnd);
+        }
     }
 }
 
