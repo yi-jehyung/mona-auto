@@ -1,6 +1,6 @@
 # mona-auto: 
 
-![logo](./assets/icon-256x256.png)
+![logo](./assets/icon.png)
 
 **mona-auto** is a powerful automation tool for Windows that recognizes on-screen images and performs predefined actions — no scripting required.  
 Just register the image you want to detect and assign actions like clicks, keystrokes, or text input.
