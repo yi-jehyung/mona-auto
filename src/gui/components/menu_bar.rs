@@ -32,7 +32,11 @@ fn new_button(ui: &mut Ui, app: &mut MyApp) {
     if ui.button(fl!(app.i18n_loader, "menu-file-new")).clicked() {
         ui.close_menu();
         match Project::make_new_project(&app.i18n_loader) {
-            Ok(project) => app.project = project,
+            Ok(project) => {
+                app.project = project.clone();
+                app.setting.last_project_path = format!("{}/project.json", project.path.unwrap()).into();
+                app.setting.save();
+            },
             Err(err) => {
                 eprintln!("{err}");
                 app.error_message = Some(err);
