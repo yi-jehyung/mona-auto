@@ -5,25 +5,18 @@ use std::{
     path::PathBuf,
 };
 
-use i18n_embed::{
-    fluent::{fluent_language_loader, FluentLanguageLoader},
-    LanguageLoader,
-};
-use i18n_embed_fl::fl;
 use serde::{Deserialize, Serialize};
-use windows::Win32::Foundation::HWND;
 
 use crate::{
     action::{Action, ActionType},
-    window::{WindowInfo, Windows},
-    Localizations,
+    fl,
+    window::{self, TargetWindow, WindowInfo},
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
-    pub name: String,
     pub description: String,
-    pub windows: Windows,
+    pub target_windows: Vec<TargetWindow>,
     pub window_info: Option<WindowInfo>,
     pub items: Vec<ActionItem>,
     #[serde(skip)]
@@ -50,9 +43,8 @@ pub struct Roi {
 impl Project {
     pub fn new() -> Self {
         Project {
-            name: "".to_string(),
             description: "".to_string(),
-            windows: super::window::Windows { windows: Vec::new() },
+            target_windows: vec![window::TargetWindow { windows: Vec::new() }],
             window_info: None,
             items: Vec::new(),
             path: None,
@@ -74,23 +66,18 @@ impl Project {
         });
     }
 
-    pub fn add_action(&mut self, item_index: usize, action_type: ActionType, loader: &FluentLanguageLoader) {
+    pub fn add_action(&mut self, item_index: usize, action_type: ActionType) {
         if let Some(items) = self.items.get_mut(item_index) {
             items.add_action(action_type);
         } else {
-            eprintln!("{}", fl!(loader, "message-project-invalid-index", index = item_index));
+            eprintln!("{}", fl!("message-project-invalid-index", index = item_index));
         }
     }
 
     pub fn save_to_json(&self, path: &PathBuf) {
-        let loader: FluentLanguageLoader = fluent_language_loader!();
-        loader
-            .load_languages(&Localizations, &[loader.fallback_language().clone()])
-            .unwrap();
-
         if let Some(parent_dir) = path.parent() {
             if let Err(err) = std::fs::create_dir_all(parent_dir) {
-                eprintln!("{}", fl!(loader, "message-project-failed-create-dir", error = err.to_string()));
+                eprintln!("{}", fl!("message-project-failed-create-dir", error = err.to_string()));
                 return;
             }
         }
@@ -98,34 +85,27 @@ impl Project {
         if let Ok(json_data) = serde_json::to_string_pretty(&self) {
             if let Ok(mut file) = File::create(path) {
                 if let Err(err) = file.write_all(json_data.as_bytes()) {
-                    eprintln!("{}", fl!(loader, "message-project-failed-saved-json", error = err.to_string()));
+                    eprintln!("{}", fl!("message-project-failed-saved-json", error = err.to_string()));
                 } else {
-                    println!(
-                        "{}",
-                        fl!(loader, "message-project-successfully-saved-json", path = path.to_string_lossy())
-                    );
+                    println!("{}", fl!("message-project-successfully-saved-json", path = path.to_string_lossy()));
                 }
             } else {
-                eprintln!(
-                    "{}",
-                    fl!(loader, "message-project-failed-create-file", path = path.to_string_lossy())
-                );
+                eprintln!("{}", fl!("message-project-failed-create-file", path = path.to_string_lossy()));
             }
         } else {
             eprintln!("Failed to convert to JSON!");
         }
     }
 
-    pub fn load_from_json(path: PathBuf, loader: &FluentLanguageLoader) -> Result<Self, String> {
-        // let mut file = File::open(&path).map_err(|e| format!(" {}", e))?;
-        let mut file = File::open(&path).map_err(|e| fl!(loader, "error-project-failed-open-file", error = e.to_string()))?;
+    pub fn load_from_json(path: PathBuf) -> Result<Self, String> {
+        let mut file = File::open(&path).map_err(|e| fl!("error-project-failed-open-file", error = e.to_string()))?;
 
         let mut json_data = String::new();
         file.read_to_string(&mut json_data)
-            .map_err(|e| fl!(loader, "error-project-failed-parse-json", error = e.to_string()))?;
+            .map_err(|e| fl!("error-project-failed-parse-json", error = e.to_string()))?;
 
         let mut project: Project =
-            serde_json::from_str(&json_data).map_err(|e| fl!(loader, "error-project-failed-parse-json", error = e.to_string()))?;
+            serde_json::from_str(&json_data).map_err(|e| fl!("error-project-failed-parse-json", error = e.to_string()))?;
 
         project.path = Some(
             path.parent()
@@ -137,23 +117,23 @@ impl Project {
         Ok(project)
     }
 
-    pub fn load(loader: &FluentLanguageLoader) -> Result<Self, String> {
+    pub fn load() -> Result<Self, String> {
         let path = rfd::FileDialog::new()
             .add_filter("json", &["json"])
             .pick_file()
-            .ok_or_else(|| fl!(loader, "error-project-file-selection-canceled"))?;
-        Project::load_from_json(path, loader)
+            .ok_or_else(|| fl!("error-project-file-selection-canceled"))?;
+        Project::load_from_json(path)
     }
 
-    pub fn make_new_project(loader: &FluentLanguageLoader) -> Result<Self, String> {
+    pub fn make_new_project() -> Result<Self, String> {
         let dir = rfd::FileDialog::new().pick_folder();
         if let Some(dir) = dir {
             let project = Project::new();
             let path = dir.join("project.json");
             project.save_to_json(&path);
-            Project::load_from_json(path, loader)
+            Project::load_from_json(path)
         } else {
-            Err(fl!(loader, "error-project-file-create-project"))
+            Err(fl!("error-project-file-create-project"))
         }
     }
 
@@ -165,39 +145,24 @@ impl Project {
         }
     }
 
-    pub fn get_first_hwnd(&self, loader: &FluentLanguageLoader) -> Result<HWND, String> {
-        self.windows
-            .windows
-            .first()
-            .map(|w| w.hwnd)
-            .ok_or(fl!(loader, "error-project-no-first-window"))
-    }
-
-    pub fn get_last_hwnd(&self, loader: &FluentLanguageLoader) -> Result<HWND, String> {
-        self.windows
-            .windows
-            .last()
-            .map(|w| w.hwnd)
-            .ok_or(fl!(loader, "error-project-last-first-window"))
-    }
-
-    pub fn get_first_title(&self) -> String {
-        match self.windows.windows.first() {
-            Some(win) => win.title.clone(),
-            None => " ".to_string(),
-        }
-    }
-
-    pub fn has_window_changed(&self, loader: &FluentLanguageLoader) -> bool {
+    pub fn has_window_changed(&mut self) -> bool {
         match &self.window_info {
             Some(info) => {
-                let current_info = WindowInfo::get_window_info(self.get_first_hwnd(loader).unwrap()).unwrap();
+                for window in self.target_windows.iter_mut() {
+                    if let Err(err) = window.rebind_hwnds() {
+                        eprintln!("{err}");
+                        continue;
+                    }
+                    if !window.windows.is_empty() {
+                        let current_info = WindowInfo::get_window_info(window.get_first_hwnd().unwrap()).unwrap();
 
-                if info.width != current_info.width {
-                    return true;
-                }
-                if info.height != current_info.height {
-                    return true;
+                        if info.width != current_info.width {
+                            return true;
+                        }
+                        if info.height != current_info.height {
+                            return true;
+                        }
+                    }
                 }
                 false
             }

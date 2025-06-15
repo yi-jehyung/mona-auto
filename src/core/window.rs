@@ -18,8 +18,10 @@ use windows::{
     },
 };
 
+use crate::fl;
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Windows {
+pub struct TargetWindow {
     pub windows: Vec<Window>,
 }
 
@@ -38,7 +40,10 @@ pub struct WindowInfo {
     pub width: i32,
     pub height: i32,
 }
-impl Windows {
+impl TargetWindow {
+    pub fn new() -> Self {
+        Self { windows: vec![] }
+    }
     pub fn rebind_hwnds(&mut self) -> std::result::Result<(), String> {
         if self.windows.is_empty() {
             return Err("The list of saved windows is empty.".to_string());
@@ -74,6 +79,21 @@ impl Windows {
             }
         }
         Ok(())
+    }
+
+    pub fn get_first_hwnd(&self) -> std::result::Result<HWND, String> {
+        self.windows.first().map(|w| w.hwnd).ok_or(fl!("error-project-no-first-window"))
+    }
+
+    pub fn get_last_hwnd(&self) -> std::result::Result<HWND, String> {
+        self.windows.last().map(|w| w.hwnd).ok_or(fl!("error-project-last-first-window"))
+    }
+
+    pub fn get_first_title(&self) -> String {
+        match self.windows.first() {
+            Some(win) => win.title.clone(),
+            None => " ".to_string(),
+        }
     }
 }
 
@@ -129,7 +149,7 @@ fn get_window_class(hwnd: HWND) -> String {
     String::new()
 }
 
-pub fn run_capture_loop() -> Windows {
+pub fn run_capture_loop() -> TargetWindow {
     println!("Left-click the window to save its information...");
     loop {
         unsafe {
@@ -167,7 +187,7 @@ pub fn client_to_screen(hwnd: HWND, x: i32, y: i32) -> Option<(i32, i32)> {
     }
 }
 
-fn get_window_hierarchy(hwnd: HWND) -> Windows {
+fn get_window_hierarchy(hwnd: HWND) -> TargetWindow {
     let mut hierarchy = Vec::new();
     let mut current_hwnd = Some(hwnd);
 
@@ -181,7 +201,7 @@ fn get_window_hierarchy(hwnd: HWND) -> Windows {
     }
 
     hierarchy.reverse();
-    Windows { windows: hierarchy }
+    TargetWindow { windows: hierarchy }
 }
 
 pub fn restore_window(hwnd: HWND, info: WindowInfo) {
@@ -224,4 +244,4 @@ pub fn bring_window_to_front(hwnd: HWND) {
 }
 
 unsafe impl Send for Window {}
-unsafe impl Send for Windows {}
+unsafe impl Send for TargetWindow {}

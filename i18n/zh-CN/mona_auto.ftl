@@ -77,6 +77,8 @@ control-panel-label-target-window = 目标窗口
 control-panel-button-find = 查找目标窗口
 control-panel-button-start = 开始
 control-panel-button-stop = 停止(F8)
+control-panel-button-add = 添加
+control-panel-button-delete = 删除
 
 ## ----- coordinate_picker_viewport.rs -----
 coordinate-picker-heading = 选择坐标
@@ -130,7 +132,6 @@ menu-help = 帮助
 menu-quit = 退出
 
 ## ----- project_panel.rs -----
-project-panel-name = 项目名称：
 project-panel-description = 项目描述：
 
 ## ----- setting_panel.rs -----

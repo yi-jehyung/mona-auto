@@ -5,31 +5,24 @@ use std::{
 };
 
 use eframe::*;
-use i18n_embed::{fluent::FluentLanguageLoader, LanguageLoader};
-use unic_langid::LanguageIdentifier;
 
-use crate::{
-    core::{
-        project::{self, Project},
-        ActionType, Setting, WindowInfo,
-    },
-    Localizations,
+use crate::core::{
+    project::{self, Project},
+    ActionType, Setting, WindowInfo,
 };
 
 pub struct MyApp {
     pub setting: Setting,
     pub project: Project,
-    pub i18n_loader: FluentLanguageLoader,
 
     pub is_automation_running: bool,
     //action_panel.rs
-    pub target_window: String,
-
-    pub target_window_rx: Option<mpsc::Receiver<crate::core::Windows>>,
+    pub find_window_index: usize,
+    pub target_window_rx: Option<mpsc::Receiver<crate::core::TargetWindow>>,
 
     pub engine_rx: Option<mpsc::Receiver<u32>>,
     pub stop_flag: Arc<AtomicBool>,
-    pub handle: Option<JoinHandle<()>>,
+    pub handle: Vec<JoinHandle<()>>,
 
     //
     pub show_window_resize_modal: bool,
@@ -93,26 +86,15 @@ pub enum CropOrRoi {
 }
 
 impl MyApp {
-    pub fn new(mut setting: Setting, i18n_loader: FluentLanguageLoader) -> Self {
-        let langid: LanguageIdentifier = setting
-            .language
-            .to_string()
-            .parse()
-            .expect("Invalid language identifier");
-        i18n_loader
-            .load_languages(&Localizations, &[langid])
-            .expect("Failed to load language.");
-
+    pub fn new(mut setting: Setting) -> Self {
         let mut project = Project::new();
 
         match setting.last_project_path {
-            Some(ref path) => match Project::load_from_json(PathBuf::from(path), &i18n_loader) {
+            Some(ref path) => match Project::load_from_json(PathBuf::from(path)) {
                 Ok(result) => project = result,
                 Err(err) => {
                     eprintln!("{}", err);
-                    let path = std::env::current_exe()
-                        .unwrap()
-                        .with_file_name("temp/project.json");
+                    let path = std::env::current_exe().unwrap().with_file_name("temp/project.json");
                     project.save_to_json(&path);
                     project.path = Some(
                         path.parent()
@@ -125,10 +107,7 @@ impl MyApp {
                 }
             },
             None => {
-                let path = std::env::current_exe()
-                    .unwrap()
-                    .with_file_name("temp")
-                    .join("project.json");
+                let path = std::env::current_exe().unwrap().with_file_name("temp").join("project.json");
                 project.save_to_json(&path);
                 project.path = Some(
                     path.parent()
@@ -145,16 +124,15 @@ impl MyApp {
         Self {
             setting,
             project,
-            i18n_loader,
 
             is_automation_running: false,
 
-            target_window: "".to_owned(),
+            find_window_index: 0,
             target_window_rx: None,
 
             engine_rx: None,
             stop_flag: Arc::new(AtomicBool::new(false)),
-            handle: None,
+            handle: vec![],
 
             show_window_resize_modal: false,
             window_size_operation: WindowSizeOperation::RestorePrevious,
@@ -204,15 +182,18 @@ impl MyApp {
     pub fn maybe_prompt_window_resize(&mut self) -> bool {
         match &self.project.window_info {
             Some(_) => {
-                if self.project.has_window_changed(&self.i18n_loader) {
+                if self.project.has_window_changed() {
                     self.show_window_resize_modal = true;
                     return true;
                 }
             }
             None => {
-                let hwnd = self.project.get_first_hwnd(&self.i18n_loader).unwrap();
-                let info = WindowInfo::get_window_info(hwnd).unwrap();
-                self.project.window_info = Some(info);
+                if !self.project.target_windows.is_empty() {
+                    let hwnd = self.project.target_windows.first().unwrap().get_first_hwnd().unwrap();
+                    let info = WindowInfo::get_window_info(hwnd).unwrap();
+                    self.project.window_info = Some(info);
+                    return false;
+                }
             }
         }
         false

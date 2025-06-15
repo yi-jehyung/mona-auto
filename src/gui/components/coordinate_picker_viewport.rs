@@ -1,10 +1,12 @@
 use egui::{Color32, Context, Image, Pos2, Rect, Ui, Vec2};
-use i18n_embed_fl::fl;
 
-use crate::gui::{
-    defines::*,
-    util::{capture_image, to_local_pos, to_screen_pos2},
-    MyApp,
+use crate::{
+    fl,
+    gui::{
+        defines::*,
+        util::{capture_image, to_local_pos, to_screen_pos2},
+        MyApp,
+    },
 };
 
 pub fn show_coordinate_picker_viewport(ctx: &Context, app: &mut MyApp) {
@@ -21,7 +23,7 @@ pub fn show_coordinate_picker_viewport(ctx: &Context, app: &mut MyApp) {
             );
 
             egui::CentralPanel::default().show(ctx, |ui| {
-                ui.heading(fl!(app.i18n_loader, "coordinate-picker-heading"));
+                ui.heading(fl!("coordinate-picker-heading"));
 
                 ui.horizontal(|ui| draw_action_buttons(ctx, ui, app));
 
@@ -51,7 +53,7 @@ fn show_image(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
                 };
             } else {
                 ui.centered_and_justified(|ui| {
-                    ui.label(fl!(app.i18n_loader, "image-preview-panel-no-selection"));
+                    ui.label(fl!("image-preview-panel-no-selection"));
                 });
             }
         });
@@ -59,10 +61,10 @@ fn show_image(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
 }
 
 fn draw_action_buttons(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
-    if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-retake")).clicked() {
+    if ui.button(fl!("image-edit-viewport-button-retake")).clicked() {
         capture_image(ctx, app);
     }
-    if ui.button(fl!(app.i18n_loader, "coordinate-picker-button-close")).clicked() {
+    if ui.button(fl!("coordinate-picker-button-close")).clicked() {
         app.coordinate_picker_enable = false;
     }
 }

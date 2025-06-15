@@ -1,10 +1,10 @@
 use std::path::Path;
 
 use egui::{Color32, Context, Image, Pos2, Rect, Stroke, StrokeKind, Ui, Vec2};
-use i18n_embed_fl::fl;
 
 use crate::{
     core::capture,
+    fl,
     gui::{
         app::{CropOrRoi, MyApp},
         defines::*,
@@ -26,7 +26,7 @@ pub fn show_image_edit_viewport(ctx: &Context, app: &mut MyApp) {
             );
 
             egui::CentralPanel::default().show(ctx, |ui| {
-                ui.heading(fl!(app.i18n_loader, "image-edit-viewport-heading"));
+                ui.heading(fl!("image-edit-viewport-heading"));
 
                 draw_action_buttons(ctx, ui, app);
 
@@ -55,21 +55,21 @@ pub fn show_image_edit_viewport(ctx: &Context, app: &mut MyApp) {
 
 fn draw_action_buttons(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
     ui.horizontal(|ui| {
-        if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-retake")).clicked() {
+        if ui.button(fl!("image-edit-viewport-button-retake")).clicked() {
             capture_image(ctx, app);
         }
 
-        if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-crop")).clicked() {
+        if ui.button(fl!("image-edit-viewport-button-crop")).clicked() {
             app.crop_or_roi = CropOrRoi::Crop;
         }
 
-        if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-roi")).clicked() {
+        if ui.button(fl!("image-edit-viewport-button-roi")).clicked() {
             app.crop_or_roi = CropOrRoi::Roi;
             app.use_crop_size = false;
         }
 
         ui.add_enabled_ui(!app.is_roi_smaller_than_image, |ui| {
-            if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-ok")).clicked() {
+            if ui.button(fl!("image-edit-viewport-button-ok")).clicked() {
                 match save_cropped_image_and_update_roi(app) {
                     Ok(()) => {
                         println!("성공적으로 저장됨");
@@ -86,7 +86,7 @@ fn draw_action_buttons(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
             }
         });
 
-        if ui.button(fl!(app.i18n_loader, "image-edit-viewport-button-cancel")).clicked() {
+        if ui.button(fl!("image-edit-viewport-button-cancel")).clicked() {
             app.show_capture_modal = false;
             app.show_image_edit_viewport = false;
         }
@@ -102,7 +102,7 @@ fn draw_image_section(ctx: &Context, ui: &mut Ui, app: &mut MyApp, image_size: &
             };
         } else {
             ui.centered_and_justified(|ui| {
-                ui.label(fl!(app.i18n_loader, "image-preview-panel-no-selection"));
+                ui.label(fl!("image-preview-panel-no-selection"));
             });
         }
     });
@@ -188,7 +188,7 @@ fn draw_image_canvas(ctx: &Context, ui: &mut Ui, app: &mut MyApp, texture: egui:
 fn draw_position_controls(ui: &mut Ui, app: &mut MyApp, image_size: Vec2) {
     ui.group(|ui| {
         if let (Some(start), Some(end)) = (app.local_a.as_mut(), app.local_b.as_mut()) {
-            ui.label(fl!(app.i18n_loader, "image-edit-viewport-label-image-range"));
+            ui.label(fl!("image-edit-viewport-label-image-range"));
             ui.label("pos a: ");
             ui.horizontal(|ui| {
                 ui.label("x: ");
@@ -206,11 +206,8 @@ fn draw_position_controls(ui: &mut Ui, app: &mut MyApp, image_size: Vec2) {
         }
     });
     ui.group(|ui| {
-        ui.label(fl!(app.i18n_loader, "image-edit-viewport-label-roi-range"));
-        ui.checkbox(
-            &mut app.use_crop_size,
-            fl!(app.i18n_loader, "image-edit-viewport-checkbox-use-crop"),
-        );
+        ui.label(fl!("image-edit-viewport-label-roi-range"));
+        ui.checkbox(&mut app.use_crop_size, fl!("image-edit-viewport-checkbox-use-crop"));
         if !app.use_crop_size {
             if let (Some(crop_start), Some(crop_end), Some(roi_start), Some(roi_end)) =
                 (app.local_a, app.local_b, app.roi_a.as_mut(), app.roi_b.as_mut())
@@ -234,7 +231,7 @@ fn draw_position_controls(ui: &mut Ui, app: &mut MyApp, image_size: Vec2) {
                 let roi_rect = Rect::from_two_pos(*roi_start, *roi_end);
 
                 if crop_rect.width() > roi_rect.width() || crop_rect.height() > roi_rect.height() {
-                    ui.colored_label(Color32::YELLOW, fl!(app.i18n_loader, "image-edit-viewport-warning-roi-size"));
+                    ui.colored_label(Color32::YELLOW, fl!("image-edit-viewport-warning-roi-size"));
                     app.is_roi_smaller_than_image = true;
                 } else {
                     app.is_roi_smaller_than_image = false;

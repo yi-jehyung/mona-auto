@@ -77,6 +77,8 @@ control-panel-label-target-window = 対象ウィンドウ
 control-panel-button-find = 対象ウィンドウを検索
 control-panel-button-start = 開始
 control-panel-button-stop = 停止(F8)
+control-panel-button-add = 追加
+control-panel-button-delete = 削除
 
 ## ----- coordinate_picker_viewport.rs -----
 coordinate-picker-heading = 座標を選択
@@ -130,7 +132,6 @@ menu-help = ヘルプ
 menu-quit = 終了
 
 ## ----- project_panel.rs -----
-project-panel-name = プロジェクト名:
 project-panel-description = プロジェクトの説明:
 
 ## ----- setting_panel.rs -----

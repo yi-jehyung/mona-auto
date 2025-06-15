@@ -1,12 +1,13 @@
 use std::fmt;
 
-use i18n_embed::fluent::FluentLanguageLoader;
-use i18n_embed_fl::fl;
 use serde::{Deserialize, Serialize};
 
-use crate::core::{
-    window::{activate_window, bring_window_to_front},
-    Input, Project, Setting,
+use crate::{
+    core::{
+        window::{activate_window, bring_window_to_front},
+        Input, Project, Setting,
+    },
+    fl,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -95,7 +96,6 @@ impl Action {
         project: &mut Project,
         setting: &Setting,
         matched_pos: Option<(u32, u32)>,
-        loader: &FluentLanguageLoader,
     ) {
         let input = Input::new(low_hwnd);
 
@@ -110,7 +110,7 @@ impl Action {
             }
             _ => {}
         }
-        
+
         match &self.action {
             ActionType::LeftClick {
                 x,
@@ -119,7 +119,7 @@ impl Action {
             } => match use_matched_position {
                 true => match matched_pos {
                     Some((matched_x, matched_y)) => {
-                        println!("{}", fl!(loader, "message-action-left-click", x = matched_x, y = matched_y));
+                        println!("{}", fl!("message-action-left-click", x = matched_x, y = matched_y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.left_click(matched_x, matched_y),
                             crate::core::InputType::SendInput => input.left_click_send_input(matched_x, matched_y),
@@ -127,8 +127,8 @@ impl Action {
                         }
                     }
                     None => {
-                        println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
-                        println!("{}", fl!(loader, "message-action-left-click", x = x, y = y));
+                        println!("{}", fl!("message-action-error-cant-find-matched-position", x = x, y = y));
+                        println!("{}", fl!("message-action-left-click", x = x, y = y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.left_click(*x, *y),
                             crate::core::InputType::SendInput => input.left_click_send_input(*x, *y),
@@ -137,7 +137,7 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-left-click", x = x, y = y));
+                    println!("{}", fl!("message-action-left-click", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.left_click(*x, *y),
                         crate::core::InputType::SendInput => input.left_click_send_input(*x, *y),
@@ -152,7 +152,7 @@ impl Action {
             } => match use_matched_position {
                 true => match matched_pos {
                     Some((matched_x, matched_y)) => {
-                        println!("{}", fl!(loader, "message-action-right-click", x = matched_x, y = matched_y));
+                        println!("{}", fl!("message-action-right-click", x = matched_x, y = matched_y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.right_click(matched_x, matched_y),
                             crate::core::InputType::SendInput => input.right_click_send_input(matched_x, matched_y),
@@ -160,8 +160,8 @@ impl Action {
                         }
                     }
                     None => {
-                        println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
-                        println!("{}", fl!(loader, "message-action-right-click", x = x, y = y));
+                        println!("{}", fl!("message-action-error-cant-find-matched-position", x = x, y = y));
+                        println!("{}", fl!("message-action-right-click", x = x, y = y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.right_click(*x, *y),
                             crate::core::InputType::SendInput => input.right_click_send_input(*x, *y),
@@ -170,7 +170,7 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-right-click", x = x, y = y));
+                    println!("{}", fl!("message-action-right-click", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.right_click(*x, *y),
                         crate::core::InputType::SendInput => input.right_click_send_input(*x, *y),
@@ -181,7 +181,7 @@ impl Action {
             ActionType::Drag { start, end, duration_ms } => {
                 println!(
                     "{}",
-                    fl!(loader, "message-action-drag", x1 = start.0, y1 = start.1, x2 = end.0, y2 = end.1)
+                    fl!("message-action-drag", x1 = start.0, y1 = start.1, x2 = end.0, y2 = end.1)
                 );
 
                 match setting.input_type {
@@ -198,7 +198,7 @@ impl Action {
             } => match use_matched_position {
                 true => match matched_pos {
                     Some((matched_x, matched_y)) => {
-                        println!("{}", fl!(loader, "message-action-scroll", x = x, y = y));
+                        println!("{}", fl!("message-action-scroll", x = x, y = y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.scroll(matched_x, matched_y, *delta),
                             crate::core::InputType::SendInput => input.scroll_send_input(matched_x, matched_y, *delta),
@@ -206,8 +206,8 @@ impl Action {
                         }
                     }
                     None => {
-                        println!("{}", fl!(loader, "message-action-error-cant-find-matched-position", x = x, y = y));
-                        println!("{}", fl!(loader, "message-action-scroll", x = x, y = y));
+                        println!("{}", fl!("message-action-error-cant-find-matched-position", x = x, y = y));
+                        println!("{}", fl!("message-action-scroll", x = x, y = y));
                         match setting.input_type {
                             crate::core::InputType::PostMessage => input.scroll(*x, *y, *delta),
                             crate::core::InputType::SendInput => input.scroll_send_input(*x, *y, *delta),
@@ -216,7 +216,7 @@ impl Action {
                     }
                 },
                 false => {
-                    println!("{}", fl!(loader, "message-action-scroll", x = x, y = y));
+                    println!("{}", fl!("message-action-scroll", x = x, y = y));
                     match setting.input_type {
                         crate::core::InputType::PostMessage => input.scroll(*x, *y, *delta),
                         crate::core::InputType::SendInput => input.scroll_send_input(*x, *y, *delta),
@@ -225,7 +225,7 @@ impl Action {
                 }
             },
             ActionType::KeyInput { keys } => {
-                println!("{}", fl!(loader, "message-action-key-input"));
+                println!("{}", fl!("message-action-key-input"));
                 for key in keys {
                     match key {
                         KeyType::Down(key_code) => {
@@ -264,30 +264,33 @@ impl Action {
                 }
             }
             ActionType::TextInput { text } => {
-                println!("{}", fl!(loader, "message-action-text-input", text = text));
+                println!("{}", fl!("message-action-text-input", text = text));
                 input.input_text(text);
             }
             ActionType::Delay { millis } => {
-                println!("{}", fl!(loader, "message-action-delay", millis = millis));
+                println!("{}", fl!("message-action-delay", millis = millis));
                 input.wait(*millis)
-            },
+            }
             ActionType::SendDiscord {
                 webhook_url,
                 message,
                 use_screenshot,
-            } => {                
+            } => {
                 let webhook_url = webhook_url.clone();
                 let message = message.clone();
                 let hwnd_ptr = low_hwnd.0 as usize;
                 let setting = setting.clone();
                 if !use_screenshot {
-                    println!("{}", fl!(loader, "message-action-send-discord", message = message.clone()));
+                    println!("{}", fl!("message-action-send-discord", message = message.clone()));
                     std::thread::spawn(move || match crate::discord::send_discord(webhook_url, message) {
                         Ok(_) => {}
                         Err(err) => eprintln!("{err}"),
                     });
                 } else {
-                    println!("{}", fl!(loader, "message-action-send-discord-with-screenshot", message = message.clone()));
+                    println!(
+                        "{}",
+                        fl!("message-action-send-discord-with-screenshot", message = message.clone())
+                    );
                     std::thread::spawn(move || {
                         match crate::discord::send_discord_with_screenshot(webhook_url, message, hwnd_ptr, &setting) {
                             Ok(_) => {}
@@ -299,9 +302,9 @@ impl Action {
             ActionType::ToggleEnable { target, enable } => match target {
                 ToggleTarget::Image(name) => {
                     if *enable {
-                        println!("{}", fl!(loader, "message-action-toogle-enable", name = name));
+                        println!("{}", fl!("message-action-toogle-enable", name = name));
                     } else {
-                        println!("{}", fl!(loader, "message-action-toogle-disable", name = name));
+                        println!("{}", fl!("message-action-toogle-disable", name = name));
                     }
                     let len = project.items.len();
                     for i in 0..len {
@@ -316,7 +319,7 @@ impl Action {
 }
 
 impl ActionType {
-    pub fn to_localized_string(&self, loader: &FluentLanguageLoader) -> String {
+    pub fn to_localized_string(&self) -> String {
         match self {
             ActionType::LeftClick {
                 x,
@@ -324,9 +327,9 @@ impl ActionType {
                 use_matched_position,
             } => {
                 if *use_matched_position {
-                    fl!(loader, "action-display-leftclick-image")
+                    fl!("action-display-leftclick-image")
                 } else {
-                    fl!(loader, "action-display-leftclick", x = x, y = y)
+                    fl!("action-display-leftclick", x = x, y = y)
                 }
             }
 
@@ -336,15 +339,14 @@ impl ActionType {
                 use_matched_position,
             } => {
                 if *use_matched_position {
-                    fl!(loader, "action-display-rightclick-image")
+                    fl!("action-display-rightclick-image")
                 } else {
-                    fl!(loader, "action-display-rightclick", x = x, y = y)
+                    fl!("action-display-rightclick", x = x, y = y)
                 }
             }
 
             ActionType::Drag { start, end, .. } => {
                 fl!(
-                    loader,
                     "action-display-drag",
                     start_x = start.0,
                     start_y = start.1,
@@ -361,40 +363,40 @@ impl ActionType {
             } => {
                 if *delta > 0 {
                     if *use_matched_position {
-                        fl!(loader, "action-display-scroll-up-image")
+                        fl!("action-display-scroll-up-image")
                     } else {
-                        fl!(loader, "action-display-scroll-up", x = x, y = y)
+                        fl!("action-display-scroll-up", x = x, y = y)
                     }
                 } else if *use_matched_position {
-                    fl!(loader, "action-display-scroll-down-image")
+                    fl!("action-display-scroll-down-image")
                 } else {
-                    fl!(loader, "action-display-scroll-down", x = x, y = y)
+                    fl!("action-display-scroll-down", x = x, y = y)
                 }
             }
 
             ActionType::KeyInput { .. } => {
-                fl!(loader, "action-display-keyinput")
+                fl!("action-display-keyinput")
             }
 
             ActionType::TextInput { .. } => {
-                fl!(loader, "action-display-textinput")
+                fl!("action-display-textinput")
             }
 
             ActionType::Delay { millis } => {
-                fl!(loader, "action-display-delay", millis = millis)
+                fl!("action-display-delay", millis = millis)
             }
 
             ActionType::SendDiscord { .. } => {
-                fl!(loader, "action-display-send-discord")
+                fl!("action-display-send-discord")
             }
 
             ActionType::ToggleEnable { target, enable } => {
                 let ToggleTarget::Image(name) = target;
 
                 if *enable {
-                    fl!(loader, "action-display-enable", name = name)
+                    fl!("action-display-enable", name = name)
                 } else {
-                    fl!(loader, "action-display-disable", name = name)
+                    fl!("action-display-disable", name = name)
                 }
             }
         }

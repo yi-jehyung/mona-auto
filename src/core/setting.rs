@@ -45,7 +45,7 @@ impl Setting {
             capture_type: CaptureType::PrintWindow,
             input_type: InputType::PostMessage,
             loop_per_second: 15,
-            threshold: 0.8,
+            threshold: 0.01,
             last_project_path: None,
         }
     }

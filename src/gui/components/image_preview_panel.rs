@@ -1,9 +1,11 @@
 use egui::{Context, Id, Image, Modal, Ui, Widget};
-use i18n_embed_fl::fl;
 
-use crate::gui::{
-    app::{CropOrRoi, MyApp},
-    util::{capture_image, load_image_cache},
+use crate::{
+    fl,
+    gui::{
+        app::{CropOrRoi, MyApp},
+        util::{capture_image, load_image_cache},
+    },
 };
 
 pub fn image_preview(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
@@ -18,7 +20,7 @@ pub fn image_preview(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
         });
 
         if app.show_capture_modal {
-            show_add_capture_modal(ctx, app);
+            show_add_capture_modal(ctx);
         }
 
         show_roi(ui, app);
@@ -40,28 +42,28 @@ fn show_image_preview(ui: &mut Ui, app: &MyApp) {
             ui.set_height(70.0);
             ui.centered_and_justified(|ui| {
                 if app.selected_item.is_none() {
-                    ui.label(fl!(app.i18n_loader, "image-preview-panel-no-selection"));
+                    ui.label(fl!("image-preview-panel-no-selection"));
                     return;
                 }
 
                 if app.project.path.is_none() {
-                    ui.label(fl!(app.i18n_loader, "image-preview-panel-no-path"));
+                    ui.label(fl!("image-preview-panel-no-path"));
                     return;
                 }
 
                 if app.selected_item.clone().unwrap().image_path.is_none() {
-                    ui.label(fl!(app.i18n_loader, "image-preview-panel-always-run"));
+                    ui.label(fl!("image-preview-panel-always-run"));
                     return;
                 }
 
-                ui.label(fl!(app.i18n_loader, "image-preview-panel-load-failed"));
+                ui.label(fl!("image-preview-panel-load-failed"));
             });
         });
     }
 }
 
 fn show_retake_button(ctx: &Context, ui: &mut Ui, app: &mut MyApp) {
-    if ui.button(fl!(app.i18n_loader, "image-preview-panel-button-retake")).clicked() {
+    if ui.button(fl!("image-preview-panel-button-retake")).clicked() {
         reset_viewport_state(app);
         capture_image(ctx, app);
         app.show_capture_modal = true;
@@ -88,13 +90,13 @@ fn show_roi(ui: &mut egui::Ui, app: &MyApp) {
     });
 }
 
-fn show_add_capture_modal(ctx: &Context, app: &mut MyApp) {
+fn show_add_capture_modal(ctx: &Context) {
     Modal::new(Id::new("capture_modal"))
         .frame(egui::Frame::popup(&ctx.style()))
         .show(ctx, |ui| {
             ui.vertical_centered(|ui| {
-                ui.heading(fl!(app.i18n_loader, "image-preview-panel-modal-heading"));
-                ui.label(fl!(app.i18n_loader, "image-preview-panel-note"));
+                ui.heading(fl!("image-preview-panel-modal-heading"));
+                ui.label(fl!("image-preview-panel-note"));
             });
         });
 }

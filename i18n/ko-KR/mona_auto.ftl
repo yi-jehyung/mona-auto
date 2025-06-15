@@ -81,6 +81,8 @@ control-panel-label-target-window = 대상 윈도우
 control-panel-button-find = 대상 윈도우 찾기
 control-panel-button-start = 시작
 control-panel-button-stop = 중지(F8)
+control-panel-button-add = 추가
+control-panel-button-delete = 삭제
 
 ## ----- coordinate_picker_viewport.rs -----
 # Heading
@@ -148,7 +150,6 @@ menu-help = 사용법
 menu-quit = 나가기
 
 ## ----- project_panel.rs -----
-project-panel-name = 프로젝트 이름:
 project-panel-description = 프로젝트 설명:
 
 ## ----- setting_panel.rs -----

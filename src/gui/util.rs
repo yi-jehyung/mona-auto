@@ -6,9 +6,7 @@ use crate::gui::MyApp;
 
 pub fn load_icon() -> eframe::egui::IconData {
     let (icon_rgba, icon_width, icon_height) = {
-        let image = image::load_from_memory(APP_ICON)
-            .expect("Failed to open icon path")
-            .into_rgba8();
+        let image = image::load_from_memory(APP_ICON).expect("Failed to open icon path").into_rgba8();
 
         let (width, height) = image.dimensions();
         let rgba = image.into_raw();
@@ -73,13 +71,18 @@ pub fn image_to_texture(ctx: &Context, image: DynamicImage) -> (ColorImage, Text
 }
 
 pub fn capture_image(ctx: &Context, app: &mut MyApp) {
-    if let Err(err) = app.project.windows.rebind_hwnds() {
-        eprintln!("rebind_hwnds 실패: {err}");
-        app.error_message = Some(err);
+    if let Some(_window) = app.project.target_windows.first() {
+        if let Err(err) = app.project.target_windows[0].rebind_hwnds() {
+            eprintln!("rebind_hwnds 실패: {err}");
+            app.error_message = Some(err);
+            return;
+        }
+    } else {
+        eprintln!("창이 없습니다.");
         return;
     }
-    
-    let hwnd = match app.project.get_last_hwnd(&app.i18n_loader) {
+
+    let hwnd = match app.project.target_windows.first().unwrap().get_last_hwnd() {
         Ok(hwnd) => hwnd,
         Err(err) => {
             eprintln!("get_last_hwnd 실패 {err}");
@@ -87,7 +90,7 @@ pub fn capture_image(ctx: &Context, app: &mut MyApp) {
             return;
         }
     };
-    
+
     match crate::core::capture::capture_from_hwnd(hwnd, app.setting.capture_type) {
         Ok(image) => {
             app.dynamic_image_cache = Some(image.clone());

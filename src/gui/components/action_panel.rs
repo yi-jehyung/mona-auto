@@ -1,11 +1,9 @@
 use egui::{RichText, ScrollArea, Ui};
-use i18n_embed_fl::fl;
 
-use crate::{core::action::Action, gui::app::MyApp};
-
+use crate::{core::action::Action, fl, gui::app::MyApp};
 
 /// Pending user actions triggered from the context menu
-/// 
+///
 /// 사용자가 컨텍스트 메뉴에서 클릭한 항목에 대한 대기 작업 상태
 struct Pending {
     edit: Option<(usize, Action)>,
@@ -40,9 +38,9 @@ pub fn action_panel(ui: &mut Ui, app: &mut MyApp) {
 
 fn show_action_panel_header(ui: &mut Ui, app: &mut MyApp, enabled: bool) {
     ui.horizontal(|ui| {
-        ui.label(RichText::new(fl!(app.i18n_loader, "action-panel-header")).strong());
+        ui.label(RichText::new(fl!("action-panel-header")).strong());
         ui.add_enabled_ui(enabled, |ui| {
-            if ui.button(fl!(app.i18n_loader, "action-panel-button-add-action")).clicked() {
+            if ui.button(fl!("action-panel-button-add-action")).clicked() {
                 app.show_action_modal = true;
                 app.key_index = None;
             }
@@ -59,23 +57,23 @@ fn show_action_list_panel(ui: &mut Ui, app: &mut MyApp, pending: &mut Pending) {
                 for (index, action) in actions.iter_mut().enumerate() {
                     ui.horizontal(|ui| {
                         let checkbox = ui
-                            .checkbox(&mut action.enabled, action.action.to_localized_string(&app.i18n_loader))
+                            .checkbox(&mut action.enabled, action.action.to_localized_string())
                             .on_hover_text(format!("{:?}", action.action));
 
                         checkbox.context_menu(|ui| {
-                            if ui.button(fl!(app.i18n_loader, "action-panel-context-edit")).clicked() {
+                            if ui.button(fl!("action-panel-context-edit")).clicked() {
                                 pending.edit = Some((index, action.clone()));
                                 ui.close_menu();
                             }
-                            if ui.button(fl!(app.i18n_loader, "action-panel-context-delete")).clicked() {
+                            if ui.button(fl!("action-panel-context-delete")).clicked() {
                                 pending.delete = Some(index);
                                 ui.close_menu();
                             }
-                            if ui.button(fl!(app.i18n_loader, "action-panel-context-move-up")).clicked() {
+                            if ui.button(fl!("action-panel-context-move-up")).clicked() {
                                 pending.move_up = Some(index);
                                 ui.close_menu();
                             }
-                            if ui.button(fl!(app.i18n_loader, "action-panel-context-move-down")).clicked() {
+                            if ui.button(fl!("action-panel-context-move-down")).clicked() {
                                 pending.move_down = Some(index);
                                 ui.close_menu();
                             }
@@ -99,14 +97,14 @@ fn handle_action_events(app: &mut MyApp, pending: Pending) {
             app.project.items[item_index].actions.remove(index);
             app.project.save_file();
         }
-        
+
         if let Some(index) = pending.move_up {
             if index > 0 && index < app.project.items[item_index].actions.len() {
                 app.project.items[item_index].actions.swap(index, index - 1);
                 app.project.save_file();
             }
         }
-        
+
         if let Some(index) = pending.move_down {
             if index + 1 < app.project.items[item_index].actions.len() {
                 app.project.items[item_index].actions.swap(index, index + 1);

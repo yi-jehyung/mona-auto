@@ -81,6 +81,8 @@ control-panel-label-target-window = Target Window
 control-panel-button-find = Find Target Window
 control-panel-button-start = Start
 control-panel-button-stop = Stop(F8)
+control-panel-button-add = Add
+control-panel-button-delete = Delete
 
 ## ----- coordinate_picker_viewport.rs -----
 # Heading
@@ -148,7 +150,6 @@ menu-help = Help
 menu-quit = Quit
 
 ## ----- project_panel.rs -----
-project-panel-name = Project Name:
 project-panel-description = Project Description:
 
 ## ----- setting_panel.rs -----

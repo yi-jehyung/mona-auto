@@ -4,16 +4,17 @@ use egui::{
     Color32,
 };
 use egui_extras::{Size, StripBuilder};
-use i18n_embed::fluent::FluentLanguageLoader;
 
 use crate::gui::{app::*, components, defines::*, util::load_icon};
 
-pub fn run_gui(i18n_loader: FluentLanguageLoader) -> eframe::Result<(), eframe::Error> {
+pub fn run_gui() -> eframe::Result<(), eframe::Error> {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_icon(load_icon())
             .with_inner_size(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT))
-            .with_resizable(false)
+            .with_min_inner_size(egui::vec2(WINDOW_WIDTH, 400.0))
+            .with_max_inner_size(egui::vec2(WINDOW_WIDTH, 9999.9))
+            .with_resizable(true)
             .with_maximize_button(false),
         ..Default::default()
     };
@@ -44,7 +45,11 @@ pub fn run_gui(i18n_loader: FluentLanguageLoader) -> eframe::Result<(), eframe::
             ));
 
             let setting = crate::core::Setting::load();
-            Ok(Box::new(MyApp::new(setting, i18n_loader)))
+            let code = setting.language.to_string();
+            if let Err(e) = crate::i18n::change_language(&code) {
+                eprintln!("Failed to load language: {e}");
+            }
+            Ok(Box::new(MyApp::new(setting)))
         }),
     )
 }
@@ -60,6 +65,7 @@ impl eframe::App for MyApp {
             // menu
             components::menu_bar::menu(ui, self);
 
+            let point = 50.0 + (self.project.target_windows.len() * 25) as f32;
             // Layout
             // ┌────────────┐
             // │            │
@@ -75,9 +81,9 @@ impl eframe::App for MyApp {
             // │            │
             // └────────────┘
             StripBuilder::new(ui)
-                .size(Size::remainder())
-                .size(Size::exact(50.0))
-                .size(Size::relative(0.5).at_least(60.0))
+                .size(Size::exact(100.0))
+                .size(Size::exact(point))
+                .size(Size::remainder().at_least(200.0))
                 .vertical(|mut strip| {
                     // 1st row: project_panel, setting_panel
                     // ┌────────────┐->┌─────┐┌─────┐
@@ -180,7 +186,7 @@ impl eframe::App for MyApp {
                             //        │     │
                             //        └─────┘
                             strip.strip(|builder| {
-                                builder.sizes(Size::remainder(), 2).vertical(|mut strip| {
+                                builder.size(Size::exact(130.0)).size(Size::remainder()).vertical(|mut strip| {
                                     //image_preview
                                     // ┌─────┐
                                     // │█████│
@@ -233,8 +239,7 @@ impl eframe::App for MyApp {
 
         if let Some(rx) = &self.target_window_rx {
             if let Ok(found) = rx.try_recv() {
-                self.project.windows = found;
-                self.target_window = self.project.get_first_title();
+                self.project.target_windows[self.find_window_index] = found;
                 self.target_window_rx = None;
 
                 self.maybe_prompt_window_resize();
@@ -245,11 +250,13 @@ impl eframe::App for MyApp {
         if let Some(rx) = &self.engine_rx {
             while let Ok(v) = rx.try_recv() {
                 if v == 1 {
-                    if let Some(handle) = self.handle.take() {
-                        self.stop_flag.store(true, std::sync::atomic::Ordering::SeqCst);
+                    self.stop_flag.store(true, std::sync::atomic::Ordering::SeqCst);
+
+                    for handle in self.handle.drain(..) {
                         let _ = handle.join();
-                        self.is_automation_running = false;
                     }
+
+                    self.is_automation_running = false;
                 }
             }
             self.engine_rx = None;
