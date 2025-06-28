@@ -42,7 +42,7 @@ pub fn control_panel(ui: &mut Ui, app: &mut MyApp) {
             });
             columns[1].horizontal(|ui| {
                 show_find_button(ui, app, i);
-                if show_delete_button(ui) {
+                if show_delete_button(ui, app) {
                     delete_indices.push(i);
                 }
             });
@@ -131,11 +131,13 @@ fn show_stop_button(ui: &mut Ui, app: &mut MyApp) {
 }
 
 fn show_add_button(ui: &mut Ui, app: &mut MyApp) {
-    if ui.button(fl!("control-panel-button-add")).clicked() {
+    let add_button = egui::Button::new(fl!("control-panel-button-add"));
+    if ui.add_enabled(!app.is_automation_running, add_button).clicked() {
         app.project.target_windows.push(TargetWindow::new());
     }
 }
 
-fn show_delete_button(ui: &mut Ui) -> bool {
-    ui.button(fl!("control-panel-button-delete")).clicked()
+fn show_delete_button(ui: &mut Ui, app: &mut MyApp) -> bool {
+    let delete_button = egui::Button::new(fl!("control-panel-button-delete"));
+    ui.add_enabled(!app.is_automation_running, delete_button).clicked()
 }
