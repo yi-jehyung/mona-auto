@@ -32,7 +32,7 @@ pub fn save_image(
     if let Some(parent) = path.parent() {
         if !parent.exists() {
             if let Err(err) = fs::create_dir_all(parent) {
-                eprintln!("{}", err);
+                eprintln!("{err}");
                 return;
             }
         }

@@ -156,7 +156,7 @@ pub fn run_capture_loop() -> TargetWindow {
             let mut point = windows::Win32::Foundation::POINT { x: 0, y: 0 };
             if GetCursorPos(&mut point).is_ok() {
                 let hwnd = WindowFromPoint(point);
-                println!("{:?} {:?}", point, hwnd);
+                println!("{point:?} {hwnd:?}");
 
                 if is_left_click_pressed() {
                     let windows = get_window_hierarchy(hwnd);

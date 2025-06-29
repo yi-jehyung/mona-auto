@@ -65,7 +65,7 @@ fn show_find_button(ui: &mut Ui, app: &mut MyApp, index: usize) {
 
         thread::spawn(move || {
             let windows = crate::core::run_capture_loop();
-            println!("{:?}", windows);
+            println!("{windows:?}");
             tx.send(windows).unwrap();
         });
     }

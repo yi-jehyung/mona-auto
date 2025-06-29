@@ -187,7 +187,7 @@ impl Project {
         while used.contains(&idx) {
             idx += 1;
         }
-        format!("{} {}", base, idx)
+        format!("{base} {idx}")
     }
 }
 

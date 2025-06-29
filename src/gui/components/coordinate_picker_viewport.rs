@@ -113,7 +113,7 @@ fn draw_image_canvas(ctx: &Context, ui: &mut Ui, app: &mut MyApp, texture: egui:
             painter.text(
                 screen_pos + Vec2::new(6.0, 0.0),
                 egui::Align2::LEFT_TOP,
-                format!("x={}, y={}", x, y),
+                format!("x={x}, y={y}"),
                 egui::TextStyle::Body.resolve(ui.style()),
                 Color32::WHITE,
             );

@@ -95,7 +95,7 @@ fn show_image_list(ui: &mut Ui, app: &mut MyApp, pending: &mut Pending) {
                         } else {
                             let label = ui
                                 .add(Label::new(&item.name).sense(Sense::click()))
-                                .on_hover_text(format!("{:#?}", item));
+                                .on_hover_text(format!("{item:#?}"));
                             label.context_menu(|ui| {
                                 if ui.button(fl!("image-list-panel-context-rename")).clicked() {
                                     app.renaming = Some(index);

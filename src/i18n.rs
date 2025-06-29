@@ -44,11 +44,11 @@ macro_rules! fl {
 // }
 
 pub fn change_language(lang_code: &str) -> Result<(), String> {
-    let lang: LanguageIdentifier = lang_code.parse().map_err(|_| format!("Invalid language tag: {}", lang_code))?;
+    let lang: LanguageIdentifier = lang_code.parse().map_err(|_| format!("Invalid language tag: {lang_code}"))?;
 
     LANGUAGE_LOADER
         .load_languages(&*LOCALIZATIONS, &[lang])
-        .map_err(|e| format!("Failed to load language: {:?}", e))?;
+        .map_err(|e| format!("Failed to load language: {e:?}"))?;
 
     Ok(())
 }

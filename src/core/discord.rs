@@ -16,11 +16,11 @@ pub fn send_discord(webhook_url: String, message: String) -> Result<(), String> 
     let client = Client::builder()
         .timeout(Duration::from_secs(10))
         .build()
-        .map_err(|e| format!("{:?}", e))?;
+        .map_err(|e| format!("{e:?}"))?;
 
     let response = match client.post(webhook_url).multipart(form).send() {
         Ok(resp) => resp,
-        Err(e) => return Err(format!("{:?}", e)),
+        Err(e) => return Err(format!("{e:?}")),
     };
 
     if response.status().is_success() {
@@ -30,7 +30,7 @@ pub fn send_discord(webhook_url: String, message: String) -> Result<(), String> 
             Ok(text) => text,
             Err(_) => "Unknown error".into(),
         };
-        Err(format!("{:?}", error_text))
+        Err(format!("{error_text:?}"))
     }
 }
 
@@ -56,11 +56,11 @@ pub fn send_discord_with_screenshot(webhook_url: String, message: String, hwnd_p
     let client = Client::builder()
         .timeout(Duration::from_secs(10))
         .build()
-        .map_err(|e| format!("{:?}", e))?;
+        .map_err(|e| format!("{e:?}"))?;
 
     let response = match client.post(webhook_url).multipart(form).send() {
         Ok(resp) => resp,
-        Err(e) => return Err(format!("{:?}", e)),
+        Err(e) => return Err(format!("{e:?}")),
     };
 
     if response.status().is_success() {

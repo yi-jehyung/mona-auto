@@ -240,7 +240,7 @@ fn draw_position_controls(ui: &mut Ui, app: &mut MyApp, image_size: Vec2) {
         }
     });
     ui.group(|ui| {
-        ui.label(format!("image_size {:?}", image_size));
+        ui.label(format!("image_size {image_size:?}"));
     });
 }
 
@@ -292,7 +292,7 @@ fn save_cropped_image_and_update_roi(app: &mut MyApp) -> Result<(), String> {
     app.project.items[index].image_path = Some(file_name);
 
     capture::save_image(image, Some(((x, y), (width, height))), &path);
-    println!("이미지 저장 완료 {:?}", path);
+    println!("이미지 저장 완료 {path:?}");
     Ok(())
 }
 

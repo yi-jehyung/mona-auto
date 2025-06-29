@@ -93,7 +93,7 @@ impl MyApp {
             Some(ref path) => match Project::load_from_json(PathBuf::from(path)) {
                 Ok(result) => project = result,
                 Err(err) => {
-                    eprintln!("{}", err);
+                    eprintln!("{err}");
                     let path = std::env::current_exe().unwrap().with_file_name("temp/project.json");
                     project.save_to_json(&path);
                     project.path = Some(

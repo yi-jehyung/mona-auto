@@ -37,7 +37,7 @@ pub fn load_image_cache(app: &mut MyApp, ctx: &Context) {
 
     match &selected_item.image_path {
         Some(image_path) => {
-            let image_path = format!("{}/image/{}", path, image_path);
+            let image_path = format!("{path}/image/{image_path}");
 
             match image::open(&image_path) {
                 Ok(image) => {
@@ -47,7 +47,7 @@ pub fn load_image_cache(app: &mut MyApp, ctx: &Context) {
                     app.needs_image_update = false;
                 }
                 Err(err) => {
-                    eprintln!("이미지 로딩 실패: {}", err);
+                    eprintln!("이미지 로딩 실패: {err}");
                     app.error_message = Some(err.to_string());
                     app.image_cache = None;
                     app.needs_image_update = false;
@@ -98,7 +98,7 @@ pub fn capture_image(ctx: &Context, app: &mut MyApp) {
             app.capture_cache = Some((color_image.into(), texture));
         }
         Err(err) => {
-            println!("capture_from_hwnd 실패 {}", err);
+            println!("capture_from_hwnd 실패 {err}");
             app.error_message = Some(err);
         }
     }

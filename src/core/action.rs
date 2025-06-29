@@ -413,10 +413,10 @@ impl fmt::Display for KeyType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use KeyType::*;
         match self {
-            Down(key) => write!(f, "↓ {}", key),
-            Up(key) => write!(f, "↑ {}", key),
-            DownAndUp(key) => write!(f, "⇵ {}", key),
-            Delay(key) => write!(f, "{}ms", key),
+            Down(key) => write!(f, "↓ {key}"),
+            Up(key) => write!(f, "↑ {key}"),
+            DownAndUp(key) => write!(f, "⇵ {key}"),
+            Delay(key) => write!(f, "{key}ms"),
         }
     }
 }
@@ -464,8 +464,8 @@ impl fmt::Display for KeyCode {
             Insert => write!(f, "Ins"),
             PageUp => write!(f, "PgUp"),
             PageDown => write!(f, "PgDn"),
-            Custom(code) => write!(f, "Custom({})", code),
-            _ => write!(f, "{:?}", self),
+            Custom(code) => write!(f, "Custom({code})"),
+            _ => write!(f, "{self:?}"),
         }
     }
 }

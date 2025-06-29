@@ -7,7 +7,7 @@ Just register the image you want to detect and assign actions like clicks, keyst
 
 ---
 
-<a href="https://discord.gg/JZhRmnZVxB"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
+<a href="https://discord.gg/rRDWJ76r"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
 
 <div align="center">
   <h3>
@@ -89,7 +89,7 @@ Bug reports, feature suggestions, UI improvements, or translation edits — they
 Feel free to [open an issue](https://github.com/yi-jehyung/mona-auto/issues) or submit a pull request.
 
 Join our **Discord community** to ask questions or share feedback
-<a href="https://discord.gg/JZhRmnZVxB"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
+<a href="https://discord.gg/rRDWJ76r"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
 
 ---
 
@@ -97,11 +97,3 @@ Join our **Discord community** to ask questions or share feedback
 > This application is currently under active development and may be unstable.  
 > It is designed for **Windows only**, and has not been tested on other platforms.  
 > Use at your own risk — the developer is **not responsible for any damage or issues** caused by its usage.
-
----
-
-## Logo & Branding
-
-The **mona-auto** logo is a trademark of **Jehyung Yi**.  
-It is protected by copyright and may not be used without explicit permission.  
-All rights reserved © 2025.

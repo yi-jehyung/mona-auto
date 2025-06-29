@@ -54,7 +54,7 @@ pub fn start_automation_loop(
                 }
             };
 
-            println!("[TARGET HWND] {:?}", low_hwnd);
+            println!("[TARGET HWND] {low_hwnd:?}");
 
             let delta = time::Duration::from_secs_f32(1.0 / setting.loop_per_second as f32);
 
@@ -95,7 +95,7 @@ pub fn start_automation_loop(
                     match &item.image_path {
                         Some(image_path) => {
                             let Some(base_path) = &path else { continue };
-                            let full_path = format!("{}/image/{}", base_path, image_path);
+                            let full_path = format!("{base_path}/image/{image_path}");
 
                             let template = match image::open(full_path) {
                                 Ok(img) => img.to_luma8(),

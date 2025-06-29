@@ -20,7 +20,7 @@ pub fn run_gui() -> eframe::Result<(), eframe::Error> {
     };
 
     run_native(
-        &format!("{} v{}", APP_NAME, APP_VERSION),
+        &format!("{APP_NAME} v{APP_VERSION}"),
         options,
         Box::new(|cc| {
             let ctx = &cc.egui_ctx;

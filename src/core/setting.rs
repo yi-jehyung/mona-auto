@@ -54,12 +54,12 @@ impl Setting {
         if let Ok(ron_data) = ron::ser::to_string_pretty(&self, ron::ser::PrettyConfig::new()) {
             if let Ok(mut file) = File::create(path) {
                 if let Err(err) = file.write_all(ron_data.as_bytes()) {
-                    eprintln!("Failed to save RON file: {}", err);
+                    eprintln!("Failed to save RON file: {err}");
                 } else {
-                    println!("RON file saved successfully: {:?}", path);
+                    println!("RON file saved successfully: {path:?}");
                 }
             } else {
-                eprintln!("Failed to create RON file: {:?}", path);
+                eprintln!("Failed to create RON file: {path:?}");
             }
         } else {
             eprintln!("Failed to convert to RON");
@@ -75,14 +75,14 @@ impl Setting {
 
     fn load_from_ron(path: PathBuf) -> Result<Setting, String> {
         // let mut file = File::open(&path).map_err(|e| format!("파일 열기 실패: {}", e))?;
-        let mut file = File::open(&path).map_err(|e| format!("Failed to open file: {}", e))?;
+        let mut file = File::open(&path).map_err(|e| format!("Failed to open file: {e}"))?;
         let mut data = String::new();
         file.read_to_string(&mut data)
             // .map_err(|e| format!("파일 읽기 실패: {}", e))?;
-            .map_err(|e| format!("Failed to read file: {}", e))?;
+            .map_err(|e| format!("Failed to read file: {e}"))?;
 
         // let setting: Setting = ron::from_str(&data).map_err(|e| format!("RON 파싱 실패: {}", e))?;
-        let setting: Setting = ron::from_str(&data).map_err(|e| format!("Failed to parse RON: {}", e))?;
+        let setting: Setting = ron::from_str(&data).map_err(|e| format!("Failed to parse RON: {e}"))?;
 
         Ok(setting)
     }
@@ -94,7 +94,7 @@ impl Setting {
         match Self::load_from_ron(path) {
             Ok(setting) => setting,
             Err(err) => {
-                eprintln!("{}", err);
+                eprintln!("{err}");
                 // println!("새로 만드는 중");
                 println!("Creating new...");
                 let setting = Setting::new();
@@ -113,6 +113,6 @@ impl fmt::Display for Language {
             Language::JaJP => "ja-JP",
             Language::ZhCN => "zh-CN",
         };
-        write!(f, "{}", langid)
+        write!(f, "{langid}")
     }
 }
