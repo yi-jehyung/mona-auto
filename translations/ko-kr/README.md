@@ -5,7 +5,7 @@
 
 ---
 
-<a href="https://discord.gg/rRDWJ76r"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
+<a href="https://discord.gg/esYQbEQGXG"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
 
 <div align="center">
   <h3>
@@ -87,7 +87,7 @@ cargo build --release
 [이슈 등록](https://github.com/yi-jehyung/mona-auto/issues) 또는 PR을 제출해 주세요.
 
 **디스코드 커뮤니티**에 참여하여 질문하거나 아이디어를 나눠보세요
-<a href="https://discord.gg/rRDWJ76r"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
+<a href="https://discord.gg/esYQbEQGXG"><img src="https://img.shields.io/badge/discord-%237289DA.svg?&style=for-the-badge&logo=discord&logoColor=white" alt="Discord Link"/></a>
 
 ---
 > ⚠ **주의 사항**  
